@@ -1,0 +1,142 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Translators:
+# George Machitidze <giomac@gmail.com>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Horizon\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-05-07 20:21-0500\n"
+"PO-Revision-Date: 2015-05-07 17:48+0000\n"
+"Last-Translator: openstackjenkins <jenkins@openstack.org>\n"
+"Language-Team: Georgian (Georgia) (http://www.transifex.com/projects/p/"
+"horizon/language/ka_GE/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ka_GE\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Filter"
+msgstr "ფილტრი"
+
+msgid "Cancel"
+msgstr "გაუქმება"
+
+msgid "Info"
+msgstr "ინფო"
+
+msgid "Available"
+msgstr "ხელმისაწვდომი"
+
+msgid "Back"
+msgstr "უკან"
+
+msgid "Next"
+msgstr "შემდეგი"
+
+#, c-format
+msgid "%s GB"
+msgstr "%s გბ"
+
+#, c-format
+msgid "%s MB"
+msgstr "%s მბ"
+
+#, c-format
+msgid "%s TB"
+msgstr "%s ტბ"
+
+#, c-format
+msgid "%s KB"
+msgstr "%s კბ"
+
+#, c-format
+msgid "Displaying %s item"
+msgid_plural "Displaying %s items"
+msgstr[0] "%s ელემენტის ჩვენება"
+
+msgid "Loading"
+msgstr "იტვირთება"
+
+msgid "No data available."
+msgstr "მონაცებელი არაა."
+
+msgid "An error occurred. Please try again later."
+msgstr "შეცდომა. გთხოვთ კიდევ სცადოთ."
+
+msgid "There was a problem communicating with the server, please try again."
+msgstr "სერვერთან დაკავშირებისას მოხდა შეცდომა, გთხოვთ კიდევ სცადოთ."
+
+msgid "Could not read the file"
+msgstr "ფაილის წაკითხვა ვერ მოხერხდა"
+
+msgid "Could not decrypt the password"
+msgstr "პაროლის დეშიფრაცია ვერ მოხერხდა"
+
+msgid "No roles"
+msgstr "როლები არაა"
+
+msgid "Roles"
+msgstr "როლები"
+
+msgid "Danger: "
+msgstr "საშიშროება:"
+
+msgid "Warning: "
+msgstr "გაფრთხილება:"
+
+msgid "Notice: "
+msgstr "გაფრთხილება:"
+
+msgid "Success: "
+msgstr "წარმატება:"
+
+msgid "Error: "
+msgstr "შეცდომა:"
+
+msgid "Working"
+msgstr "ვმუშაობ"
+
+msgid "There was an error submitting the form. Please try again."
+msgstr "შეცდომა ფორმის გაგზავნისას. გთხოვთ კიდევ სცადოთ."
+
+msgid "None"
+msgstr "არცერთი"
+
+msgid "Delete"
+msgstr "წაშლა"
+
+msgid "STATUS"
+msgstr "მდგომარეობა"
+
+msgid "ID"
+msgstr "ID"
+
+msgid "Interfaces"
+msgstr "ინტერფეისები"
+
+msgid "Add Interface"
+msgstr "ინტერფეისის დამატება"
+
+msgid "No items to display."
+msgstr "საჩვენებელი ელემენტები არაა"
+
+msgid "An error occurred while updating."
+msgstr "შეცდომა განახლებისას."
+
+#, c-format
+msgid "You have selected %s. "
+msgstr "თქვენ აირჩიეთ %s. "
+
+#, c-format
+msgid "Confirm %s"
+msgstr "%s-ის დადასტურება"
+
+msgid "Not authorized to do this operation."
+msgstr "ამ ოპერაციის შესასრულებელი ავტორიზაცია არაა"
+
+msgid "Passwords do not match."
+msgstr "პაროლები არ ემთხვევა"
