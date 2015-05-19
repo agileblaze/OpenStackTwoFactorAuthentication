@@ -1,0 +1,167 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Translators:
+# Mücahit Büyükyılmaz <mucahit@konya.edu.tr>, 2015
+# sercanaydogan <sercanaydogan@gmail.com>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Horizon\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-05-07 20:21-0500\n"
+"PO-Revision-Date: 2015-05-07 18:03+0000\n"
+"Last-Translator: openstackjenkins <jenkins@openstack.org>\n"
+"Language-Team: Turkish (Turkey) (http://www.transifex.com/projects/p/horizon/"
+"language/tr_TR/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: tr_TR\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Added"
+msgstr "Eklendi"
+
+msgid "Duplicate keys are not allowed"
+msgstr "Tekrarlanan anahtarlara izin verilmiyor"
+
+msgid "Filter"
+msgstr "Filtre"
+
+msgid "Existing Metadata"
+msgstr "Varolan üstveri"
+
+msgid "No available metadata"
+msgstr "Üstveri mevcut değil"
+
+msgid "Submit"
+msgstr "Gönder"
+
+msgid "Cancel"
+msgstr "İptal"
+
+msgid "Available"
+msgstr "Uygun"
+
+msgid "Back"
+msgstr "Geri"
+
+msgid "Next"
+msgstr "İleri"
+
+#, c-format
+msgid "%s GB"
+msgstr "%s GB"
+
+#, c-format
+msgid "%s MB"
+msgstr "%s MB"
+
+#, c-format
+msgid "%s TB"
+msgstr "%s TB"
+
+#, c-format
+msgid "%s KB"
+msgstr "%s KB"
+
+#, c-format
+msgid "Displaying %s item"
+msgid_plural "Displaying %s items"
+msgstr[0] "%s adet gösteriliyor"
+
+msgid "Unable to retrieve security groups."
+msgstr "Güvenlik grupları alınamadı."
+
+msgid "Loading"
+msgstr "Yükleniyor"
+
+msgid "No data available."
+msgstr "Veri yok."
+
+msgid "An error occurred. Please try again later."
+msgstr "Bir hata oluştu. Lütfen tekrar deneyin."
+
+msgid "There was a problem communicating with the server, please try again."
+msgstr "Sunucu ile iletişimde bir sorun var, lütfen tekrar deneyin."
+
+msgid "Could not read the file"
+msgstr "Dosya okunamadı"
+
+msgid "Could not decrypt the password"
+msgstr "Şifre Çözülemedi"
+
+msgid "No roles"
+msgstr "Rol yok"
+
+msgid "Roles"
+msgstr "Roller"
+
+msgid "Danger: "
+msgstr "Tehlike:"
+
+msgid "Warning: "
+msgstr "Uyarı:"
+
+msgid "Notice: "
+msgstr "Dikkat:"
+
+msgid "Success: "
+msgstr "Başarılı:"
+
+msgid "Error: "
+msgstr "Hata:"
+
+msgid "Working"
+msgstr "Çalışıyor"
+
+msgid "There was an error submitting the form. Please try again."
+msgstr "Formu gönderirken bir hata oluştu. Lütfen tekrar deneyin."
+
+msgid "None"
+msgstr "Yok"
+
+msgid "Delete"
+msgstr "Sil"
+
+msgid "STATUS"
+msgstr "DURUM"
+
+msgid "ID"
+msgstr "KİMLİK"
+
+msgid "Interfaces"
+msgstr "Arayüzler"
+
+msgid "Delete Interface"
+msgstr "Arayüzü Sil"
+
+msgid "Open Console"
+msgstr "Konsol Aç"
+
+msgid "View Details"
+msgstr "Ayrıntıları Göster"
+
+msgid "Add Interface"
+msgstr "Arayüz ekle"
+
+msgid "No items to display."
+msgstr "Görüntülenecek öğe yok."
+
+msgid "An error occurred while updating."
+msgstr "Güncelleme sırasında bir hata oluştu."
+
+#, c-format
+msgid "You have selected %s. "
+msgstr "Seçili %s var."
+
+#, c-format
+msgid "Confirm %s"
+msgstr "%s Onayla"
+
+msgid "Not authorized to do this operation."
+msgstr "Bu işlemi yapmak için yetkiniz yok."
+
+msgid "Passwords do not match."
+msgstr "Şifreler uyuşmuyor."
