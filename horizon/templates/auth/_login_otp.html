@@ -1,0 +1,36 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block modal-header %}{% trans "Validate OTP" %}
+
+{% endblock %}
+{% block modal_class %}login {% if hide %}modal hide{% endif %}{% endblock %}
+
+{% block form_action %}{% url 'otp_login' %}{% endblock %}
+{% block ng_controller %}hzLoginCtrl{% endblock %}
+{% block autocomplete %}{{ HORIZON_CONFIG.password_autocomplete }}{% endblock %}
+
+{% block modal-body %}
+  <fieldset hz-login-finder>
+   <label class="control-label">Enter the OTP sent to your Contact Number</label><br/><br/>
+    {% if request.COOKIES.logout_reason %}
+    <div class="form-group clearfix error" id="logout_reason">
+      <span class="help-block alert alert-danger"><p>{{ request.COOKIES.logout_reason }}</p></span>
+    </div>
+    {% endif %}
+    {% if next %}<input type="hidden" name="{{ redirect_field_name }}" value="{{ next }}" />{% endif %}
+    {% include "horizon/common/_form_fields.html" %}
+  </fieldset>
+{% endblock %}
+
+{% block modal-footer %}
+  <button id="loginBtn" type="submit" class="btn btn-primary pull-right">
+    <span ng-show="auth_type==='credentials'">{% trans "Send OTP" %}</span>
+    </button>
+
+<button class="resend_otp btn btn-warning pull-left"  type="button" ng-click = "resend_otp()">Resend OTP</button><br/><br/>
+<div class="alert alert-message alert-warning" ng-show="checked1">Check Messagebox in your Contact Number</div>
+
+
+{% endblock %}

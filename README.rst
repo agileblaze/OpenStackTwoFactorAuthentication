@@ -1,51 +1,23 @@
 =============================
-Horizon (OpenStack Dashboard)
+Horizon (OpenStack Dashboard) with Two Factor Authentication
 =============================
 
 Horizon is a Django-based project aimed at providing a complete OpenStack
 Dashboard along with an extensible framework for building new dashboards
-from reusable components. The ``openstack_dashboard`` module is a reference
-implementation of a Django site that uses the ``horizon`` app to provide
-web-based interactions with the various OpenStack projects.
+from reusable components. The ``Two Factor Authentication`` provides:
 
-* Release management: https://launchpad.net/horizon
-* Blueprints and feature specifications: https://blueprints.launchpad.net/horizon
-* Issue tracking: https://bugs.launchpad.net/horizon
+ * Password Authentication
+ * OTP Authentication
 
-
-Using Horizon
+Password Authentication
 =============
 
-See ``doc/source/topics/install.rst`` about how to install Horizon
-in your OpenStack setup. It describes the example steps and
-has pointers for more detailed settings and configurations.
+Password Authenttication is the default authentication provided by Horizon. Here, user credentials like Username and Password are verified.
+If credentials are verified then using OpenStack Keystone v3 OTP authentication plugin will send the OTP value over SMS using the Twilio service.
+This OTP is sent to users stored contact number using Twilio API Service. User then gets redirected to the OTP Validation page  
 
-It is also available at http://docs.openstack.org/developer/horizon/topics/install.html.
+OTP Validation
+=============
 
-Getting Started for Developers
-==============================
+Once the user enters the OTP value into the second template and submits the form Horizon will make an RPC call to Keystone and will include 2 methods: one for password and another for OTP.Upon successful authentication Horizon will grant access to the portal. Upon failure you will display an invalid credentials error message. If authentication fails to the plugin more than 3 times then keystonewill lockout the user for 24 hours where authentication will always fail during the lockout period.	  
 
-``doc/source/quickstart.rst`` or
-http://docs.openstack.org/developer/horizon/quickstart.html
-describes how to setup Horizon development environment and start development.
-
-Building Contributor Documentation
-==================================
-
-This documentation is written by contributors, for contributors.
-
-The source is maintained in the ``doc/source`` directory using
-`reStructuredText`_ and built by `Sphinx`_
-
-.. _reStructuredText: http://docutils.sourceforge.net/rst.html
-.. _Sphinx: http://sphinx-doc.org/
-
-* Building Automatically::
-
-    $ ./run_tests.sh --docs
-
-* Building Manually::
-
-    $ tools/with_venv.sh sphinx-build doc/source doc/build/html
-
-Results are in the ``doc/build/html`` directory

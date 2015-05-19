@@ -24,9 +24,52 @@
      * controller for determining which
      * authentication method user picked.
      */
-    .controller('hzLoginCtrl', function($scope) {
+    .controller('hzLoginCtrl',['$scope','$http', function($scope, $http) {
       $scope.auth_type = 'credentials';
-    })
+       $scope.checked1= false;
+      $scope.resend_otp = function () {
+        $scope.checked1= true;
+         $http({
+            method: 'POST',
+            url: '/auth/resend/',
+            headers: {'X-CSRFToken':getCookie('csrftoken')
+        ,'sessionid':getCookie('sessionid'),'username':getCookie('username')
+        },
+        }).success(function (result) {
+                
+                  if (result) {
+                 $scope.checked1= true;
+            }
+            else {
+              alert("3");
+         
+                $scope.checked1= true;
+            }
+        })
+            .error(function (error) {
+                //Showing error message 
+                $scope.checked1= true;
+            });
+          }
+        function getCookie(name) 
+     {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') 
+    {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) 
+        {
+            var cookie = jQuery.trim(cookies[i]);
+            if (cookie.substring(0, name.length + 1) == (name + '=')) 
+            {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+    }     
+    }])
 
     /**
      * @ngdoc hzLoginFinder
