@@ -1,24 +1,30 @@
 import base64
+from datetime import datetime, timedelta
 import hashlib
 import hmac
 import struct
 import time
 import uuid
 
+from oslo_log import log
+from oslo_config import cfg
+
 from keystone import exception
 from keystone.common import sql as keystone_sql
 from keystone.identity.backends.sql import User
-from keystone.openstack.common import log
 import sqlalchemy as sql
+from sqlalchemy import and_
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.sql import func
 
-import utils
-import config
+
+from keystone.auth.plugins.otp import utils
+from keystone.auth.plugins.otp import config
 
 LOG = log.getLogger(__name__)
-CONF = config.CONF
+CONF = cfg.CONF
 
 engine = create_engine(CONF.otp_options.connection)
 session = sessionmaker(bind = engine)()
@@ -32,6 +38,8 @@ Integer = sql.Integer
 
 #"""
 #Created the Tables
+
+
 
 class UserOneTimePassword(keystone_sql.ModelBase):
     __tablename__  = 'user_otp'
@@ -90,8 +98,17 @@ def get_otp_auth_status(user_id):
     user
     """
     try:
-        session.flush()
-        return session.query(OneTimePasswordFailures).filter(OneTimePasswordFailures.user_id == user_id).one()
+        time_now  = datetime.fromtimestamp(utils.get_current_unix_time())
+
+        count = sql.session.query(sql.OneTimePasswordFailures).filter(
+            and_(sql.OneTimePasswordFailures.user_id == user_id,
+                 sql.OneTimePasswordFailures.last_failure_timestamp > time_now - timedelta(hours=24) )).count()
+        
+        last_failure_timestamp = sql.session.query(func.max(sql.OneTimePasswordFailures.last_failure_timestamp)).filter(
+            sql.OneTimePasswordFailures.user_id == user_id).one()
+        
+        return {'count':int(count) , 'last_failure_timestamp':last_failure_timestamp[0]}
+        #return session.query(OneTimePasswordFailures).filter(OneTimePasswordFailures.user_id == user_id).one()
     except Exception as no_failure_info_exists:
         return None
 
@@ -100,24 +117,20 @@ def generate_secrete_for_allusers():
     
     This is interactive and asks for phone numbers for each user
     """
-    session.flush()
     for row in session.query(User.id, User.name).all():
         phone_no = raw_input('What is the phone number of user %s ? : ' %(row.name))
-        user_otp_info = UserOneTimePassword(row.id, phone_no)
-        session.add(user_otp_info)
-    session.commit()
+        add_phone_number(row.id, phone_no)
     
-    
-def set_phone_secret(user_id, phone_number):
+def add_phone_number(user_id, phone_number):
     user_otp_info = UserOneTimePassword(user_id, phone_number)
     session.add(user_otp_info)
     session.commit()
-
+    
 def get_secret(user_id):
     """Get secret stored for a user for the generation of one-time password
     
     """
-    session.flush()
+    print user_id
     row = session.query(UserOneTimePassword.secret).filter(UserOneTimePassword.user_id == user_id).one()
     return row.secret
 
@@ -127,7 +140,6 @@ def generate_unique_value(model_class, attribute = 'id'):
     This is used to generate unique id for tables, and also used to generate unique secret for
     each user
     """
-    session.flush()
     new_value = utils.generate_uuid4_string()
     try:
         session.query(model_class).filter(getattr(model_class, attribute, 'id') == new_value).one()
@@ -149,14 +161,17 @@ def update_otp_auth_status(user_id, success = True):
     :param user_id: id of the user trying to autheticate
     :param success: whether the authenication succeeded
     """
-    session.flush()
     if not success:
         try:
-            failure_status = session.query(OneTimePasswordFailures).filter(OneTimePasswordFailures.user_id == user_id).one()
+            #failure_status = session.query(OneTimePasswordFailures).filter(OneTimePasswordFailures.user_id == user_id).one()
             #update one time password failure data into database
-            failure_status.successive_failures = failure_status.successive_failures + 1
-            failure_status.last_failure_timestamp = utils.get_current_mysql_gmtime()
-            session.add(failure_status)
+            #failure_status.successive_failures = failure_status.successive_failures + 1
+            #failure_status.last_failure_timestamp = utils.get_current_mysql_gmtime()
+            #session.add(failure_status)
+            #session.commit()
+            
+            new_failure_info = OneTimePasswordFailures(user_id, 1)
+            session.add(new_failure_info)
             session.commit()
              
         except AttributeError as attribute_missing:
@@ -165,13 +180,14 @@ def update_otp_auth_status(user_id, success = True):
             LOG.exception(no_user_info.message)
             
             #add one time password failure data into database
-            new_failure_info = OneTimePasswordFailures(user_id, 1)
-            session.add(new_failure_info)
-            session.commit()
+            #new_failure_info = OneTimePasswordFailures(user_id, 1)
+            #session.add(new_failure_info)
+            #session.commit()
     else:
         try:
-            failure_status = session.query(OneTimePasswordFailures).filter(OneTimePasswordFailures.user_id == user_id).one()
-            session.delete(failure_status)
+            #failure_status = session.query(OneTimePasswordFailures).filter(OneTimePasswordFailures.user_id == user_id).one()
+            session.query(OneTimePasswordFailures).filter(OneTimePasswordFailures.user_id == user_id).delete()
+            #session.delete(failure_status)
             session.commit()
         except AttributeError as attribute_missing:
             LOG.exception(attribute_missing.message)
@@ -197,7 +213,6 @@ def get_phone_number(user_id):
     
     Used to send the one-time password to the user
     """
-    session.flush()
     row = session.query(UserOneTimePassword.phone_number).filter(UserOneTimePassword.user_id == user_id).one()
     return row.phone_number
 #"""    
@@ -226,8 +241,9 @@ if __name__ == '__main__':
         keystone_sql.ModelBase.metadata.create_all(engine)
         generate_secrete_for_allusers()
     except Exception as exception_db_create:
-        print "Exception in creating db \n"
+        print "Exception in creating db"
         print exception_db_create.message
+        LOG.warning(exception_db_create.message)
 
 
 

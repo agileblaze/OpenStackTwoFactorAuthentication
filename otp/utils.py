@@ -6,19 +6,26 @@ import struct
 import time
 import uuid
 
+from oslo_log import log
+from oslo_config import cfg 
+
 """Functions for generating and validaing OTP
 
 The method used for one-time password generation is RFC6238-TOTP.
 For more information on RFC6238 please visit
 https://tools.ietf.org/html/rfc6238
 """
+#CONF = config.ConfigOpts(cfg)
+#CONF(sys.argv[1:])
 
-CONF = config.CONF
+
+CONF = cfg.CONF
+
+LOG = log.getLogger(__name__)
 
 def _get_time_step():
     """Gets the time-step for the TOTP
     """
-    
     return CONF.otp_options.time_step
     
 def _get_max_time_step_window():
@@ -39,7 +46,7 @@ def _get_max_time_step_window():
     return CONF.otp_options.time_step_window_back
 
     
-def generate_totp(secret):
+def generate_totp(secret, position = 0):
     """Generate the TOTP using secret
     
     :param secret: the secret of the user
@@ -48,11 +55,13 @@ def generate_totp(secret):
     """
     
     #code to generate otp based on unix time
-    unix_time_synced = get_time_step_window(0)
+    unix_time_synced = get_time_step_window(position)
     hmac_digest = hmac.new(bytes([unix_time_synced]), secret, digestmod = hashlib.sha256)
     
-    totp = (struct.unpack("16i",bytearray(hmac_digest.hexdigest()))[15]+1000000) % 1000000
+    totp = struct.unpack("16i",bytearray(hmac_digest.hexdigest()))[15]% 1000000
     
+    while len(str(totp)) < 6:
+        totp = totp * 10
     #return otp
     return  totp
     
@@ -97,12 +106,18 @@ def validate_totp(secret, totp):
     
     :raises AssertionError: if the validation fails
     """
-
-    for position in range(0, _get_max_time_step_window()):
-        otp_for_validation = generate_totp(secret)
-        if otp_for_validation == int(totp) :
-            return None
-    raise AssertionError  
+    try:
+        
+        for position in range(0, _get_max_time_step_window()):
+            
+            otp_for_validation = generate_totp(secret, position)
+            LOG.info(str(totp) +" "+str(otp_for_validation))
+            if otp_for_validation == int(totp) :
+                return None
+        raise AssertionError
+    except Exception as e:
+        LOG.warning(e.message)
+        raise AssertionError
 
 def generate_secret():
     

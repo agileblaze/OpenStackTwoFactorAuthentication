@@ -1,5 +1,5 @@
 from keystone.exception import SecurityError
-from keystone.openstack.common.gettextutils import _
+from keystone.i18n import _
 
 class Blocked(SecurityError):
     message_format = _("Your account is blocked for 24 hrs.")

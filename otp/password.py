@@ -15,16 +15,17 @@
 import calendar
 import time
 
-from keystone.auth.plugins.password import UserAuthInfo
+from oslo_log import log
+
+from keystone.auth.plugins.core import UserAuthInfo
 from keystone.common import dependency
 from keystone import auth
 from keystone import exception
-from keystone.openstack.common.gettextutils import _
-from keystone.openstack.common import log
+from keystone.i18n import _
 
-import exceptions
-import sql
-import twilio_api
+from keystone.auth.plugins.otp import exceptions
+from keystone.auth.plugins.otp import sql
+from keystone.auth.plugins.otp import twilio_api
 
 
 METHOD_NAME = 'password_otp'
@@ -41,10 +42,10 @@ class UserOtpAuthInfo(object):
         self.user_id = user_id
         
     def validate(self):
-        otp_info  = sql.get_otp_auth_status(self.user_id)
-        if otp_info:
-            if otp_info.successive_failures > 2:
-                time_blocked_from = otp_info.last_failure_timestamp
+        failures  = sql.get_otp_auth_status(self.user_id)
+        if failures:
+            if failures['count'] > 2:
+                time_blocked_from = failures['last_failure_timestamp']
                 blocked_from_epoch = calendar.timegm(time.strptime(str(time_blocked_from), '%Y-%m-%d %H:%M:%S'))
                 blocked_period_seonds = self.epoch_time_difference(time.time(), blocked_from_epoch)
                 if self.is_account_blocked(blocked_period_seonds):
@@ -74,15 +75,14 @@ class Password(auth.AuthMethodHandler):
 
     def authenticate(self, context, auth_payload, user_context):
         """Try to authenticate against the identity backend."""
-        user_info = UserAuthInfo.create(auth_payload)
+        user_info = UserAuthInfo.create(auth_payload, self.method)
         otp_auth_info = UserOtpAuthInfo(user_info.user_id)
 
         try:
             self.identity_api.authenticate(
                 context,
                 user_id=user_info.user_id,
-                password=user_info.password,
-                domain_scope=user_info.domain_id)
+                password=user_info.password)
             
             otp_auth_info.validate()
             twilio_api.send_otp(user_info.user_id)

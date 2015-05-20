@@ -12,17 +12,17 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+from oslo_log import log
 
-from keystone.auth.plugins.password import UserAuthInfo
+from keystone.auth.plugins.core import UserAuthInfo
 from keystone.common import dependency
 from keystone import auth
 from keystone import exception
-from keystone.openstack.common.gettextutils import _
-from keystone.openstack.common import log
+from keystone.i18n import _
 
-import utils
-import sql
-import twilio_api
+from  keystone.auth.plugins.otp import utils
+from  keystone.auth.plugins.otp import sql
+from keystone.auth.plugins.otp import twilio_api
 
 METHOD_NAME = 'otp'
 
@@ -36,7 +36,7 @@ class Otp(auth.AuthMethodHandler):
 
     def authenticate(self, context, auth_payload, user_context):
         """Try to authenticate against the identity backend."""
-        user_info = UserAuthInfo.create(auth_payload)
+        user_info = UserAuthInfo.create(auth_payload, self.method)
         try:
             sql.authenticate(user_info.user_id, user_info.password)
             sql.update_otp_auth_status(user_info.user_id, True)
