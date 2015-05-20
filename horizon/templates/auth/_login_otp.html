@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load url from future %}
 
-{% block modal-header %}{% trans "Validate OTP" %}
+{% block modal-header %}
 
 {% endblock %}
 {% block modal_class %}login {% if hide %}modal hide{% endif %}{% endblock %}
@@ -13,7 +13,7 @@
 
 {% block modal-body %}
   <fieldset hz-login-finder>
-   <label class="control-label">Enter the OTP sent to your Contact Number</label><br/><br/>
+   <label class="control-label">To proceed please enter the One-Time Password received via SMS on your registered mobile number and click on continue</label><br/><br/>
     {% if request.COOKIES.logout_reason %}
     <div class="form-group clearfix error" id="logout_reason">
       <span class="help-block alert alert-danger"><p>{{ request.COOKIES.logout_reason }}</p></span>
@@ -25,12 +25,13 @@
 {% endblock %}
 
 {% block modal-footer %}
-  <button id="loginBtn" type="submit" class="btn btn-primary pull-right">
-    <span ng-show="auth_type==='credentials'">{% trans "Send OTP" %}</span>
-    </button>
 
-<button class="resend_otp btn btn-warning pull-left"  type="button" ng-click = "resend_otp()">Resend OTP</button><br/><br/>
-<div class="alert alert-message alert-warning" ng-show="checked1">Check Messagebox in your Contact Number</div>
+<label class="control-label">If you do not receive the OTP within 30 seconds, please click the "Resend OTP" button to request for a new OTP</label><br/><br/>
+  <button id="loginBtn" type="submit" class="btn btn-primary pull-right">
+    <span ng-show="auth_type==='credentials'">{% trans "Continue" %}</span>
+    </button>
+ <button class="resend_otp btn btn-warning pull-left"  type="button" ng-click = "resend_otp()">Resend OTP</button><br/><br/>
+<div class="alert alert-message alert-warning" ng-show="checked1">OTP will be generated and will be sent as an SMS alert to your registered Mobile Number </div>
 
 
 {% endblock %}

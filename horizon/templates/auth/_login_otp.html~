@@ -2,24 +2,18 @@
 {% load i18n %}
 {% load url from future %}
 
-{% block modal-header %}{% trans "Enter the OTP sent to your Contact Number" %}{% endblock %}
+{% block modal-header %}
+
+{% endblock %}
 {% block modal_class %}login {% if hide %}modal hide{% endif %}{% endblock %}
 
 {% block form_action %}{% url 'otp_login' %}{% endblock %}
-{% block ng_controller %}hzOtpLoginCtrl{% endblock %}
+{% block ng_controller %}hzLoginCtrl{% endblock %}
 {% block autocomplete %}{{ HORIZON_CONFIG.password_autocomplete }}{% endblock %}
 
 {% block modal-body %}
- 
   <fieldset hz-login-finder>
-    {% if request.user.is_authenticated and 'next' in request.GET %}
-    <div class="form-group clearfix error">
-      <span class="help-block"><p>{% trans "You do not have permission to access the resource:" %}</p>
-        <p><b>{{ request.GET.next }}</b></p>
-        <p>{% url 'horizon:user_home' as home_url %}{% blocktrans %}Login as different user or go back to <a href="{{ home_url }}"> home page</a>{% endblocktrans %}</p>
-      </span>
-    </div>
-    {% endif  %}
+   <label class="control-label">To proceed please enter the One-Time Password received via SMS on your registered mobile number and click on continue</label><br/><br/>
     {% if request.COOKIES.logout_reason %}
     <div class="form-group clearfix error" id="logout_reason">
       <span class="help-block alert alert-danger"><p>{{ request.COOKIES.logout_reason }}</p></span>
@@ -31,11 +25,13 @@
 {% endblock %}
 
 {% block modal-footer %}
+
+<label class="control-label">If you do not receive the OTP within 30 seconds, please click the "Resend OTP" button to request for a new OTP</label><br/><br/>
   <button id="loginBtn" type="submit" class="btn btn-primary pull-right">
-    <span ng-show="auth_type==='credentials'">{% trans "Send OTP" %}</span>
+    <span ng-show="auth_type==='credentials'">{% trans "Continue" %}</span>
     </button>
-<form action="" method="POST">
-    <input id="submit" type="button" value="Resend OTP" class="btn btn-primary pull-left"/>
-</form>
+ <button class="resend_otp btn btn-warning pull-left"  type="button" ng-click = "resend_otp()">Resend OTP</button><br/><br/>
+<div class="alert alert-message alert-warning" ng-show="checked1">New OTP will be delivered to your Contact Number</div>
+
 
 {% endblock %}
