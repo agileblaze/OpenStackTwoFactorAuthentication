@@ -100,16 +100,17 @@ def get_otp_auth_status(user_id):
     try:
         time_now  = datetime.fromtimestamp(utils.get_current_unix_time())
 
-        count = sql.session.query(sql.OneTimePasswordFailures).filter(
-            and_(sql.OneTimePasswordFailures.user_id == user_id,
-                 sql.OneTimePasswordFailures.last_failure_timestamp > time_now - timedelta(hours=24) )).count()
+        count = session.query(OneTimePasswordFailures).filter(
+            and_(OneTimePasswordFailures.user_id == user_id,
+                 OneTimePasswordFailures.last_failure_timestamp > time_now - timedelta(hours=24) )).count()
         
-        last_failure_timestamp = sql.session.query(func.max(sql.OneTimePasswordFailures.last_failure_timestamp)).filter(
-            sql.OneTimePasswordFailures.user_id == user_id).one()
+        last_failure_timestamp = session.query(func.max(OneTimePasswordFailures.last_failure_timestamp)).filter(
+            OneTimePasswordFailures.user_id == user_id).one()
         
         return {'count':int(count) , 'last_failure_timestamp':last_failure_timestamp[0]}
         #return session.query(OneTimePasswordFailures).filter(OneTimePasswordFailures.user_id == user_id).one()
     except Exception as no_failure_info_exists:
+        LOG.info(no_failure_info_exists.message)
         return None
 
 def generate_secrete_for_allusers():
@@ -170,6 +171,8 @@ def update_otp_auth_status(user_id, success = True):
             #session.add(failure_status)
             #session.commit()
             
+            LOG.info("failure data pushed")
+            
             new_failure_info = OneTimePasswordFailures(user_id, 1)
             session.add(new_failure_info)
             session.commit()
@@ -185,6 +188,7 @@ def update_otp_auth_status(user_id, success = True):
             #session.commit()
     else:
         try:
+            LOG.info("failure data deleted")
             #failure_status = session.query(OneTimePasswordFailures).filter(OneTimePasswordFailures.user_id == user_id).one()
             session.query(OneTimePasswordFailures).filter(OneTimePasswordFailures.user_id == user_id).delete()
             #session.delete(failure_status)

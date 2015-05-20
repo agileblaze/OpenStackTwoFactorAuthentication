@@ -43,6 +43,9 @@ class UserOtpAuthInfo(object):
         
     def validate(self):
         failures  = sql.get_otp_auth_status(self.user_id)
+        
+        LOG.info("failures : " + str(failures))
+        
         if failures:
             if failures['count'] > 2:
                 time_blocked_from = failures['last_failure_timestamp']
