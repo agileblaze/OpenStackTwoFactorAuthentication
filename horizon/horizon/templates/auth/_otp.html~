@@ -1,0 +1,17 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block form_action %}{% url 'otp' %}{% endblock %}
+{% block ng_controller %}hzLoginCtrl{% endblock %}
+  <div class="otp">
+<label name="otp_label">Enter the OTP we sent to your contact number</label>
+    <input type="hidden" name="user_id" id="user_id" value="" /><br/>
+    <input type="text" name="otp" id="otp" value="" />
+  </div>
+ {% block modal-footer %}
+  <button id="OtploginBtn" type="submit" class="btn btn-primary pull-right">
+    <span>Send OTP</span>
+  </button>
+{% endblock%}
+
